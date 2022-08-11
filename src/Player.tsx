@@ -1,12 +1,32 @@
 import * as React from 'react';
 import Button from './Button';
 import Slider from './Slider';
+import {AppContext} from "./App";
+import {useContext, useEffect, useState} from "react";
+import {BlocksCategory, SLIDES} from "./reactTypes";
 
 const Player = React.forwardRef(function Player(
   props: { className?: string },
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
+
+  const {blocks} = useContext(AppContext);
+  const [slides, setSlides] = useState<BlocksCategory>();
+
+  useEffect(() => {
+    if (blocks) {
+      const slidesCategory = blocks?.children.find((item:BlocksCategory) => item.name === SLIDES);
+      if (slidesCategory) {
+        setSlides(slidesCategory);
+      } else {
+        console.warn('!slides inside blocks.children:', blocks?.children);
+      }
+    }
+  }, [blocks]);
+
+
   const { className = '', ...other } = props;
+
   return (
     <div className={`max-w-[600px] max-h-[240px] m-auto ${className}`} {...other} ref={ref}>
       <div className="bg-white border-slate-100 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl p-4 pb-6 sm:p-10 sm:pb-8 lg:p-6 xl:p-10 xl:pb-8 space-y-6 sm:space-y-8 lg:space-y-6 xl:space-y-8">

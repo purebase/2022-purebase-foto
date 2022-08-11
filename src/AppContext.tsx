@@ -1,8 +1,8 @@
 import React, {FC, useCallback, useMemo, useState} from "react";
-import {BLOCKS, Blocks, MAIN, USERS} from "../functions/src/_copy/reactTypesCopy";
 import {doc, Firestore, getDoc} from "firebase/firestore";
 import {AppContext} from "./App";
 import {getFBFirestore, IFirebaseConfig} from "./firebase";
+import {Blocks, BLOCKS, MAIN, USERS} from "./reactTypes";
 
 
 const firebaseConfig: IFirebaseConfig = {
@@ -16,6 +16,7 @@ const firebaseConfig: IFirebaseConfig = {
 };
 
 export interface AppContextProps {
+    db: Firestore,
     blocks: Blocks | undefined,
     setBlocks: (value: Blocks | undefined) => void,
     loadBlocks: (db: Firestore, sellerId: string) => void,
@@ -47,7 +48,7 @@ export const AppContextProvider:FC = (props) => {
     return (
         <AppContext.Provider
             value={{
-                blocks, setBlocks, loadBlocks
+                db, blocks, setBlocks, loadBlocks
             }}>
             {props.children}
         </AppContext.Provider>
