@@ -3,9 +3,7 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "emulator:others": "firebase emulators:start --only auth,firestore,storage",
-    "emulator:functions": "firebase emulators:start --only functions --inspect-functions",
-    "emulators": "firebase emulators:start --only auth,firestore,storage,functions --inspect-functions",
+    "firebase": "firebase emulators:start --only auth,firestore,storage,functions --inspect-functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",

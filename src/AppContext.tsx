@@ -1,8 +1,8 @@
 import React, {FC, useCallback, useMemo, useState} from "react";
-import {doc, Firestore, getDoc} from "firebase/firestore";
+import {collection, Firestore, getDocs} from "firebase/firestore";
 import {AppContext} from "./App";
 import {getFBFirestore, IFirebaseConfig} from "./firebase";
-import {Blocks, BLOCKS, MAIN, USERS} from "./reactTypes";
+import {ALBUMS, MediaAlbums} from "./reactTypes";
 
 
 const firebaseConfig: IFirebaseConfig = {
@@ -17,9 +17,9 @@ const firebaseConfig: IFirebaseConfig = {
 
 export interface AppContextProps {
     db: Firestore,
-    blocks: Blocks | undefined,
-    setBlocks: (value: Blocks | undefined) => void,
-    loadBlocks: (db: Firestore, sellerId: string) => void,
+    mediaAlbums: MediaAlbums | undefined,
+    setMediaAlbums: (value: MediaAlbums | undefined) => void,
+    loadMediaAlbums: (db: Firestore) => void,
 }
 
 
@@ -27,28 +27,35 @@ export const AppContextProvider:FC = (props) => {
 
     const db = useMemo<Firestore>(() => getFBFirestore(firebaseConfig), [firebaseConfig]);
 
-    const [blocks, setBlocks] = useState<Blocks | undefined>();
+    const [mediaAlbums, setMediaAlbums] = useState<MediaAlbums | undefined>();
 
-    const loadBlocks = useCallback((db: Firestore, sellerId: string) => {
-        const docRef = doc(db, USERS, sellerId, BLOCKS, MAIN);
-        getDoc(docRef)
-            .then(snapshot => {
-                if (snapshot.exists()) {
-                    console.debug("loadBlocks() -> data: ", snapshot.data())
-                    setBlocks(snapshot.data() as Blocks);
-                } else {
-                    console.debug('loadBlocks() > snapshot.exists() == false')
-                }
+    const loadMediaAlbums = useCallback(async (db: Firestore) => {
+        /*        const docRef = doc(db, ALBUMS).;
+                get(docRef)
+                    .then(snapshot => {
+                        if (snapshot.exists()) {
+                            console.debug("loadMediaAlbums() -> data: ", snapshot.data())
+                            setMediaAlbums(snapshot.data() as MediaAlbums);
+                        } else {
+                            console.debug('loadMediaAlbums() > snapshot.exists() == false')
+                        }
 
-            })
-            .catch(reason => console.error("loadBlocks()", reason))
+                    })
+                    .catch(reason => console.error("loadMediaAlbums()", reason))*/
+
+        // https://firebase.google.com/docs/firestore/query-data/get-data
+        const querySnapshot = await getDocs(collection(db, ALBUMS));
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
     }, []);
 
 
     return (
         <AppContext.Provider
             value={{
-                db, blocks, setBlocks, loadBlocks
+                db, mediaAlbums, setMediaAlbums, loadMediaAlbums
             }}>
             {props.children}
         </AppContext.Provider>

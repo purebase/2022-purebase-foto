@@ -5,10 +5,10 @@ import {useContext, useEffect} from "react";
 
 function App() {
 
-    const {db, loadBlocks} = useContext(AppContext);
+    const {db, loadMediaAlbums} = useContext(AppContext);
 
     useEffect(() => {
-        loadBlocks(db, "marmarita");
+        loadMediaAlbums(db);
 
         // eslint-disable-next-line
     }, []);

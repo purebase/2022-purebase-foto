@@ -2,28 +2,14 @@ import * as React from 'react';
 import Button from './Button';
 import Slider from './Slider';
 import {AppContext} from "./App";
-import {useContext, useEffect, useState} from "react";
-import {BlocksCategory, SLIDES} from "./reactTypes";
+import {useContext} from "react";
 
 const Player = React.forwardRef(function Player(
   props: { className?: string },
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
 
-  const {blocks} = useContext(AppContext);
-  const [slides, setSlides] = useState<BlocksCategory>();
-
-  useEffect(() => {
-    if (blocks) {
-      const slidesCategory = blocks?.children.find((item:BlocksCategory) => item.name === SLIDES);
-      if (slidesCategory) {
-        setSlides(slidesCategory);
-      } else {
-        console.warn('!slides inside blocks.children:', blocks?.children);
-      }
-    }
-  }, [blocks]);
-
+  const {mediaAlbums} = useContext(AppContext);
 
   const { className = '', ...other } = props;
 
