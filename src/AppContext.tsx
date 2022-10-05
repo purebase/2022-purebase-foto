@@ -1,5 +1,5 @@
 import React, {FC, useCallback, useMemo, useState} from "react";
-import {collection, Firestore, getDocs} from "firebase/firestore";
+import {collection, Firestore, getDocs, query, where, doc, getDoc} from "firebase/firestore";
 import {AppContext} from "./App";
 import {getFBFirestore, IFirebaseConfig} from "./firebase";
 import {ALBUMS, MediaAlbums} from "./reactTypes";
@@ -29,26 +29,44 @@ export const AppContextProvider:FC = (props) => {
 
     const [mediaAlbums, setMediaAlbums] = useState<MediaAlbums | undefined>();
 
-    const loadMediaAlbums = useCallback(async (db: Firestore) => {
-        /*        const docRef = doc(db, ALBUMS).;
-                get(docRef)
+    const loadMediaAlbums = useCallback((db: Firestore) => {
+           /* const docRef = doc(db, ALBUMS, "aZtFGHwk86FJUtxb7");
+                getDoc(docRef)
                     .then(snapshot => {
                         if (snapshot.exists()) {
                             console.debug("loadMediaAlbums() -> data: ", snapshot.data())
-                            setMediaAlbums(snapshot.data() as MediaAlbums);
+                            //setMediaAlbums(snapshot.data() as MediaAlbums);
                         } else {
                             console.debug('loadMediaAlbums() > snapshot.exists() == false')
                         }
 
                     })
-                    .catch(reason => console.error("loadMediaAlbums()", reason))*/
-
+                    .catch(reason => console.error("loadMediaAlbums()", reason))
+*/
         // https://firebase.google.com/docs/firestore/query-data/get-data
-        const querySnapshot = await getDocs(collection(db, ALBUMS));
+/*        const query1 = query(collection(db, ALBUMS), where("id", "==", "aZtFGHwk86FJUtxb7"));
+        const querySnapshot = await getDocs(query1);
+
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             console.log(doc.id, " => ", doc.data());
-        });
+
+
+            // https://stackoverflow.com/questions/46692985/firebase-cloud-firestore-query-not-finding-my-document
+
+        });*/
+
+        const query1 = query(collection(db, ALBUMS));
+        //const query1 = query(collection(db, ALBUMS), where("id", "==", "aZtFGHwk86FJUtxb7"));
+
+        getDocs(query1)
+            .then(querySnapshot => {
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    console.log(doc.id, " => ", doc.data());
+                });
+            });
+
     }, []);
 
 

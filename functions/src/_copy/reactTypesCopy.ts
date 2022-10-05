@@ -1,4 +1,5 @@
-export const ALBUMS:string = 'albums';
+// CASE SENSITIV!!
+export const ALBUMS:string = 'ALBUMS';
 
 export interface MediaAlbums {
     children: Array<MediaAlbum>

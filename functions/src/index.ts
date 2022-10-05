@@ -15,10 +15,25 @@ admin.initializeApp();
 
 // aZtFGHwk86FJUtxb7
 export const addGPhotoAlbum = functions.region('europe-west1').https
-    .onRequest((req: Request, res: Response) => {
+    .onRequest(async (req: Request, res: Response) => {
             const id = req.query['id'] as string;
             if (id === undefined) {
-                res.send({error: "addGPhotoAlbum: missing album id for parsing!", query: req.query});
+                res.send({error: "addGPhotoAlbum: missing album id for parsing!!", query: req.query});
+
+                const albumsRef = admin.firestore().collection(ALBUMS);
+
+                // const albumsSnap = await albumsRef.get();
+                const albumsSnap = await albumsRef.where('id', '==', "aZtFGHwk86FJUtxb7").get();
+
+                if (albumsSnap.empty) {
+                    console.log('No matching documents.');
+                    return;
+                }
+
+                console.log("albumsSnap by id? ");
+                albumsSnap.forEach(doc => {
+                    console.log(doc.id, '=>', doc.data());
+                });
 
             } else {
                 const regex = /\["(https:\/\/lh3\.googleusercontent\.com\/[a-zA-Z0-9\-_]*)"/g;
@@ -26,17 +41,17 @@ export const addGPhotoAlbum = functions.region('europe-west1').https
                 axios.get('https://photos.app.goo.gl/' + id)
                     .then(async response => {
                         // 1. prepare images list:
-                        const images:Media[] = [];
+                        const images: Media[] = [];
                         // 2. collect all image urls:
                         let match;
                         while (match = regex.exec(response.data)) {
                             images.push({url: match[1]});
                         }
                         // 3. create and persist new album:
-                        const album:MediaAlbum = {id: id, children: images}
+                        const album: MediaAlbum = {id: id, children: images}
                         await admin.firestore()
-                                .collection(ALBUMS)
-                                .doc(id).set(album);
+                            .collection(ALBUMS)
+                            .doc(id).set(album);
                         // 4. send client a feedback:
                         res.send({"album image count": images.length});
 
