@@ -4,7 +4,9 @@ import * as functions from "firebase-functions";
 import {Request, Response} from "firebase-functions";
 import * as admin from "firebase-admin";
 import axios from "axios";
-import {ALBUMS, Media, MediaAlbum} from "./_copy/reactTypesCopy";
+import {ALBUMS, HOST_TYPE, Media, MediaAlbum, MediaAlbums} from "./_copy/reactTypesCopy";
+
+const REGION = 'europe-west1';
 
 admin.initializeApp();
 
@@ -14,51 +16,74 @@ admin.initializeApp();
     });*/
 
 // aZtFGHwk86FJUtxb7
-export const addGPhotoAlbum = functions.region('europe-west1').https
+export const addGoogleAlbum = functions.region(REGION).https
     .onRequest(async (req: Request, res: Response) => {
-            const id = req.query['id'] as string;
-            if (id === undefined) {
-                res.send({error: "addGPhotoAlbum: missing album id for parsing!!", query: req.query});
+        const rawUrl = req.query['url'] as string;
 
-                const albumsRef = admin.firestore().collection(ALBUMS);
+        if (rawUrl === undefined) {
+            res.send({error: "addGoogleAlbum: missing album url for parsing!!", query: req.query});
+            return;
+        }
 
-                // const albumsSnap = await albumsRef.get();
-                const albumsSnap = await albumsRef.where('id', '==', "aZtFGHwk86FJUtxb7").get();
+        // # Strip url:
+        const urLSegments = rawUrl.split("/");
+        const id = urLSegments.pop();
+        const host = urLSegments.pop() as HOST_TYPE;
+        if (id === undefined || host === undefined) {
+            res.send({error: "addGoogleAlbum: generating id OR host FROM url not possible!!", query: req.query});
+            return;
+        }
 
-                if (albumsSnap.empty) {
-                    console.log('No matching documents.');
-                    return;
-                }
-
-                console.log("albumsSnap by id? ");
-                albumsSnap.forEach(doc => {
-                    console.log(doc.id, '=>', doc.data());
-                });
-
-            } else {
+        axios.get(rawUrl)
+            .then(async response => {
+                // # prepare images list:
+                const images: Media[] = [];
+                // # collect all image urls:
                 const regex = /\["(https:\/\/lh3\.googleusercontent\.com\/[a-zA-Z0-9\-_]*)"/g;
+                let match;
+                while (match = regex.exec(response.data)) {
+                    images.push({url: match[1]});
+                }
+                // https://photos.app.goo.gl/LNUqbxTMcARqGrh28
+                // # create new album:
+                const album: MediaAlbum = {
+                    id: id, children: images,
+                    host: host, url: rawUrl
+                };
+                // # persist new album:
+                await admin.firestore()
+                    .collection(ALBUMS)
+                    .doc(host + '-' + id).set(album);
+                // # send client a feedback:
+                res.send({"album image count": images.length});
 
-                axios.get('https://photos.app.goo.gl/' + id)
-                    .then(async response => {
-                        // 1. prepare images list:
-                        const images: Media[] = [];
-                        // 2. collect all image urls:
-                        let match;
-                        while (match = regex.exec(response.data)) {
-                            images.push({url: match[1]});
-                        }
-                        // 3. create and persist new album:
-                        const album: MediaAlbum = {id: id, children: images}
-                        await admin.firestore()
-                            .collection(ALBUMS)
-                            .doc(id).set(album);
-                        // 4. send client a feedback:
-                        res.send({"album image count": images.length});
-
-                    })
-                    .catch(reason => {
-                        res.send({"error": reason});
-                    });
-            }
+            })
+            .catch(reason => {
+                res.send({"error": reason});
+            });
         }
     );
+
+export const fetchMediaAlbums = functions.region(REGION).https
+    .onRequest(async (req: Request, res: Response) => {
+        // 1. Create reference of albums;
+        const albumsRef = admin.firestore().collection(ALBUMS);
+        // 2. Create snapshot - of all or by query:
+        const albumsSnap = await albumsRef.get();
+        //const albumsSnap = await albumsRef.where('id', '==', "aZtFGHwk86FJUtxb7").get();
+        // 3. Check whether its empty:
+        if (albumsSnap.empty) {
+            res.send({error: "fetchMediaAlbums: No matching documents.", query: req.query});
+            return;
+        }
+        // 4. Process data:
+        console.log("albumsSnap by id?");
+        const albums:MediaAlbums = [];
+        albumsSnap.forEach(doc => {
+            console.log(doc.id, '=>', doc.data());
+            const album = doc.data() as MediaAlbum;
+            albums.push(album);
+        });
+        // # send response:
+        res.send(albums);
+    });
