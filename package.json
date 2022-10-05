@@ -16,6 +16,7 @@
     "postcss": "~8.4.16",
     "react": "~17.0.2",
     "react-dom": "~17.0.2",
+    "react-photo-album": "^1.16.1",
     "react-scripts": "~5.0.1",
     "typescript": "~4.7.4"
   },

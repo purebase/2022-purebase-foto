@@ -1,6 +1,7 @@
 // CASE SENSITIV!!
 export const ALBUMS:string = 'ALBUMS';
-export type HOST_TYPE = 'adobe' | 'photos.app.goo.gl';
+
+export type HOST_TYPE = 'adobe.ly' | 'photos.app.goo.gl';
 
 export type MediaAlbums = MediaAlbum[];
 
