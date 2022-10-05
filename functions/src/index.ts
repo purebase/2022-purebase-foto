@@ -6,13 +6,15 @@ import * as admin from "firebase-admin";
 import axios from "axios";
 import {ALBUMS, HOST_TYPE, Media, MediaAlbum, MediaAlbums} from "./_copy/reactTypesCopy";
 
+import * as cheerio from 'cheerio';
+
 const REGION = 'europe-west1';
 
 admin.initializeApp();
 
 /*export const addAdobePortfolioAlbum = functions.region('europe-west1').https
     .onRequest((req: Request, res: Response) => {
-        // https://lightroom.adobe.com/shares/2b2d21abce0243cd94b163038dc4bf2b
+        // https://adobe.ly/3Swsocc
     });*/
 
 // aZtFGHwk86FJUtxb7
@@ -39,7 +41,10 @@ export const addGoogleAlbum = functions.region(REGION).https
                 // # prepare images list:
                 const images: Media[] = [];
                 // # collect all image urls:
-                const regex = /\["(https:\/\/lh3\.googleusercontent\.com\/[a-zA-Z0-9\-_]*)"/g;
+                // # url =>
+                //const regex = /\["(https:\/\/lh3\.googleusercontent\.com\/[a-zA-Z0-9\-_]*)"/g;
+                // ## url, w, h =>
+                const regex = /\["("https:\/\/lh3\.googleusercontent\.com\/[a-zA-Z0-9\-_]*",[0-9\-_]*,[0-9\-_]*)"/g;
                 let match;
                 while (match = regex.exec(response.data)) {
                     images.push({url: match[1]});
@@ -55,7 +60,7 @@ export const addGoogleAlbum = functions.region(REGION).https
                     .collection(ALBUMS)
                     .doc(host + '-' + id).set(album);
                 // # send client a feedback:
-                res.send({"album image count": images.length});
+                res.send({"album_image_count": images.length});
 
             })
             .catch(reason => {
@@ -63,6 +68,28 @@ export const addGoogleAlbum = functions.region(REGION).https
             });
         }
     );
+
+export const tryCheerio = functions.region(REGION).https
+    .onRequest(async (req: Request, res: Response) => {
+        const rawUrl = req.query['url'] as string;
+
+        if (rawUrl === undefined) {
+            res.send({error: "parseGoogleAlbum: missing album url for parsing!!", query: req.query});
+            return;
+        }
+
+        // TRY CHEERIO -> https://cheerio.js.org/
+
+        const $ = cheerio.load('<h2 class="title">Hello world</h2>');
+
+        $('h2.title').text('Hello there!');
+        $('h2').addClass('welcome');
+
+        console.log($.html());
+
+        res.send({message: "parseGoogleAlbum DONE"});
+
+    });
 
 export const fetchMediaAlbums = functions.region(REGION).https
     .onRequest(async (req: Request, res: Response) => {
