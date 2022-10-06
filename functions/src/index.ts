@@ -12,9 +12,13 @@ const REGION = 'europe-west1';
 
 admin.initializeApp();
 
+// ADOBE
+// SHAREDLINK https://adobe.ly/3Swsocc
+// TARGETSRC https://lightroom.adobe.com/shares/2b2d21abce0243cd94b163038dc4bf2b
+// IMAGE https://lightroom.adobe.com/v2c/spaces/2b2d21abce0243cd94b163038dc4bf2b/assets/1c3173143fb6bb35e6a9f7b8b8aa9056/revisions/64fe3c6d32b5467588446e7fa3bc3c89/renditions/b050948ece60dc9277b1793dea0035bd
+// Problem: An IMAGE kommt man nur nach dem Rendern ran :-(
 /*export const addAdobePortfolioAlbum = functions.region('europe-west1').https
     .onRequest((req: Request, res: Response) => {
-        // https://adobe.ly/3Swsocc
     });*/
 
 // aZtFGHwk86FJUtxb7
@@ -66,9 +70,10 @@ export const addGoogleAlbum = functions.region(REGION).https
                 };
 
                 // # persist new album:
+                const docName = encodeURIComponent(title)
                 await admin.firestore()
                     .collection(ALBUMS)
-                    .doc(host + '-' + id).set(album);
+                    .doc(host + '-' + docName).set(album);
 
                 // # send client a feedback:
                 res.send({"album_image_count": images.length});
