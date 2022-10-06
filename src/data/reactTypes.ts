@@ -15,7 +15,7 @@ export interface MediaAlbum {
 }
 
 export interface Media {
-    url: string
+    src: string,
     width: number,
     height: number
 }

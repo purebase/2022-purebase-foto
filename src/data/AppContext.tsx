@@ -1,9 +1,8 @@
 import React, {FC, useCallback, useMemo, useState} from "react";
 import {collection, Firestore, getDocs, query} from "firebase/firestore";
-import {AppContext} from "./App";
+import {AppContext} from "../App";
 import {getFBFirestore, IFirebaseConfig} from "./firebase";
-import {ALBUMS, MediaAlbums} from "./reactTypes";
-import {MediaAlbum} from "../functions/src/_copy/reactTypesCopy";
+import {ALBUMS, MediaAlbum, MediaAlbums} from "./reactTypes";
 
 
 const firebaseConfig: IFirebaseConfig = {

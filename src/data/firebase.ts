@@ -3,7 +3,7 @@ import {Auth, connectAuthEmulator, getAuth} from "firebase/auth";
 import {connectFirestoreEmulator, Firestore, getFirestore} from "firebase/firestore";
 import {connectStorageEmulator, FirebaseStorage, getStorage} from "firebase/storage";
 import {connectFunctionsEmulator, Functions, getFunctions} from "firebase/functions";
-import {isRunningOnLocalhost} from "./commons";
+import {isRunningOnLocalhost} from "../commons";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 

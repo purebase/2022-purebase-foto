@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from './Button';
 import Slider from './Slider';
-import {AppContext} from "./App";
+import {AppContext} from "../App";
 import {useContext} from "react";
 
 const Player = React.forwardRef(function Player(

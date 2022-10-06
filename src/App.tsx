@@ -1,8 +1,7 @@
 import * as React from 'react';
-import Player from './Player';
-import {AppContextProps} from "./AppContext";
+import {AppContextProps} from "./data/AppContext";
 import {useContext, useEffect} from "react";
-import PhotoAlbum from "react-photo-album";
+import {PhotoAlbumsView} from "./views/PhotoAlbumsView";
 
 function App() {
 
@@ -45,7 +44,7 @@ function App() {
               />
           </div>*/}
 
-          <PhotoAlbum layout="rows" photos={photos} />
+        <PhotoAlbumsView/>
 
       </>
   );

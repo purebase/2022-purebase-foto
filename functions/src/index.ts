@@ -51,7 +51,7 @@ export const addGoogleAlbum = functions.region(REGION).https
                 let match;
                 while (match = regex.exec(response.data)) {
                     console.log("images? - match[0]: ", match[0]);
-                    images.push({url: match[1], width: Number(match[2]), height: Number(match[3])});
+                    images.push({src: match[1], width: Number(match[2]), height: Number(match[3])});
                 }
 
                 // # collect the title:
@@ -70,10 +70,10 @@ export const addGoogleAlbum = functions.region(REGION).https
                 };
 
                 // # persist new album:
-                const docName = encodeURIComponent(title)
+                //const docName = encodeURIComponent(title)
                 await admin.firestore()
                     .collection(ALBUMS)
-                    .doc(host + '-' + docName).set(album);
+                    .doc(host + '-' + id).set(album);
 
                 // # send client a feedback:
                 res.send({"album_image_count": images.length});
