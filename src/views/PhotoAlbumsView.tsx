@@ -4,6 +4,16 @@ import {AppContext} from "../App";
 import {useContext, useEffect, useState} from "react";
 import {Media} from "../data/reactTypes";
 
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+
+// import optional lightbox plugins
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
+import Slideshow from "yet-another-react-lightbox/plugins/slideshow";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+
 type IPhotoAlbums = IPhotoAlbum[];
 interface IPhotoAlbum {
     title: string,
@@ -53,6 +63,8 @@ export const PhotoAlbumsView = () => {
 
     const [photoAlbums, setPhotoAlbums] = useState<IPhotoAlbums>();
 
+    const [index, setIndex] = useState(-1);
+
     useEffect(() => {
 
         console.debug("mediaAlbums changed");
@@ -62,8 +74,11 @@ export const PhotoAlbumsView = () => {
                     title: mediaAlbum.title,
                     cover: mediaAlbum.cover,
                     photos: mediaAlbum.children.map((media => {
-                        const displayWidth = Math.round(media.width / 10);//226;//
-                        const displayHeight = Math.round(media.height / 10);//302;//
+                        const displayWidth = Math.round(media.width / 2);//226;//
+                        const displayHeight = Math.round(media.height / 2);//302;//
+
+                        // TODO Die Groesse an Verwendungsstelle umrechnen ist effizienter!!
+
                         return {
                             // INFO https://developers.google.com/photos/library/guides/access-media-items#image-base-urls
                             src: media.src + `=w${displayWidth}-h${displayHeight}-no?authuser=0`,
@@ -90,7 +105,18 @@ export const PhotoAlbumsView = () => {
                             <h4>{album.title}</h4>
                             {/*PROBLEM: teils 403 von Google -> https://developers.google.com/drive/api/guides/handle-errors*/}
                             {/*<PhotoAlbum layout="rows" photos={album.photos} renderPhoto={renderPhoto}/>*/}
-                            <PhotoAlbum layout="rows" photos={album.photos} renderPhoto={renderPhoto}/>
+                            <PhotoAlbum layout="rows" photos={album.photos} renderPhoto={renderPhoto}
+                                        /*targetRowHeight={150}*/
+                                        onClick={(event, photo, index) => setIndex(index)}/>
+
+                            <Lightbox
+                                slides={album.photos}
+                                open={index >= 0}
+                                index={index}
+                                close={() => setIndex(-1)}
+                                // enable optional lightbox plugins
+                                plugins={[Fullscreen, Slideshow, Thumbnails, Zoom]}
+                                />
                            {/* {
                                 // alle Bilder werden geladen - referrerPolicy ist wichtig
                                 album.photos.map((value, index, array) => {
