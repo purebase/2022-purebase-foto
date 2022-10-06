@@ -9,11 +9,15 @@ export interface MediaAlbum {
     id: string,
     host: HOST_TYPE,
     url: string,
-    children: Array<Media>
+    title: string,
+    children: Array<Media>,
+    cover?: Media
 }
 
 export interface Media {
     url: string
+    width: number,
+    height: number
 }
 
 

@@ -40,25 +40,36 @@ export const addGoogleAlbum = functions.region(REGION).https
             .then(async response => {
                 // # prepare images list:
                 const images: Media[] = [];
+
                 // # collect all image urls:
-                // # url =>
-                //const regex = /\["(https:\/\/lh3\.googleusercontent\.com\/[a-zA-Z0-9\-_]*)"/g;
-                // ## url, w, h =>
-                const regex = /\["("https:\/\/lh3\.googleusercontent\.com\/[a-zA-Z0-9\-_]*",[0-9\-_]*,[0-9\-_]*)"/g;
+                // PLAYGROUND https://regex101.com/r/OrRoWk/1
+                const regex = /\["(https:\/\/lh3\.googleusercontent\.com\/[a-zA-Z0-9\-_]*)",([0-9]*),([0-9]*)/g;
                 let match;
                 while (match = regex.exec(response.data)) {
-                    images.push({url: match[1]});
+                    console.log("images? - match[0]: ", match[0]);
+                    images.push({url: match[1], width: Number(match[2]), height: Number(match[3])});
                 }
-                // https://photos.app.goo.gl/LNUqbxTMcARqGrh28
+
+                // # collect the title:
+                // PLAYGROUND https://regex101.com/r/xMY9lf/1
+                const regex2 = /<meta property="og:title" content="(.*?)">/g;
+                const match2 =  regex2.exec(response.data);
+                console.log("title? - match2[0]: ", match2 ? match2[0] : null);
+                const title = match2 ? match2[1] : "UNKNOWN"
+
                 // # create new album:
                 const album: MediaAlbum = {
-                    id: id, children: images,
-                    host: host, url: rawUrl
+                    id: id, title: title, children: images,
+                    host: host, url: rawUrl,
+                    cover: images.pop() ?? undefined
+                    //cover: images.length > 0 ? images.pop() : undefined
                 };
+
                 // # persist new album:
                 await admin.firestore()
                     .collection(ALBUMS)
                     .doc(host + '-' + id).set(album);
+
                 // # send client a feedback:
                 res.send({"album_image_count": images.length});
 
