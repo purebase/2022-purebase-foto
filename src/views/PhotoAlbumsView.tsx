@@ -6,12 +6,10 @@ import {Media} from "../data/reactTypes";
 
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-
-// import optional lightbox plugins
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import Slideshow from "yet-another-react-lightbox/plugins/slideshow";
-import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 type IPhotoAlbums = IPhotoAlbum[];
@@ -74,16 +72,19 @@ export const PhotoAlbumsView = () => {
                     title: mediaAlbum.title,
                     cover: mediaAlbum.cover,
                     photos: mediaAlbum.children.map((media => {
-                        const displayWidth = Math.round(media.width / 2);//226;//
-                        const displayHeight = Math.round(media.height / 2);//302;//
-
+/*                        const displayWidth = Math.round(media.width / 10);//226;//
+                        const displayHeight = Math.round(media.height / 10);//302;//
+                        */
                         // TODO Die Groesse an Verwendungsstelle umrechnen ist effizienter!!
 
                         return {
                             // INFO https://developers.google.com/photos/library/guides/access-media-items#image-base-urls
-                            src: media.src + `=w${displayWidth}-h${displayHeight}-no?authuser=0`,
-                            width: displayWidth,
-                            height: displayHeight
+                            // Um 403 zu vermeiden, die src so laden - ist eh schon auf card-groesse:
+                            //src: media.src + `=w${displayWidth}-h${displayHeight}-no?authuser=0`,
+                            src: media.src,
+                            //
+                            width: media.width,
+                            height: media.height
                         }
                     }))
                 };
