@@ -5,6 +5,7 @@ import {Request, Response} from "firebase-functions";
 import * as admin from "firebase-admin";
 import axios from "axios";
 import {ALBUMS, HOST_TYPE, Media, MediaAlbum, MediaAlbums} from "./_copy/reactTypesCopy";
+const Photos = require('googlephotos');
 
 import * as cheerio from 'cheerio';
 
@@ -129,4 +130,17 @@ export const fetchMediaAlbums = functions.region(REGION).https
         });
         // # send response:
         res.send(albums);
+    });
+
+export const connectAPI = functions.region(REGION).https
+    .onRequest(async (req: Request, res: Response) => {
+        // https://console.cloud.google.com/apis/credentials?authuser=0&project=purebase-foto
+        // 1. Service enablen; 2. Cedentials; 3. API Key statt Oauth2
+       // https://www.npmjs.com/package/googlephotos
+        const photos = new Photos("--INSERT-API-KEY--");
+
+        // https://developers.google.com/photos/library/reference/rest/v1/albums/list
+        const response = await photos.albums.list(100);
+        console.log("connectAPI() response: ", response);
+        res.send(response);
     });
