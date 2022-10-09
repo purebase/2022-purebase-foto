@@ -58,7 +58,6 @@ export const PhotoAlbumsView = () => {
                             <h4>{album.title}</h4>
                             <PhotoAlbumView title={album.title} cover={album.cover} photos={album.photos}/>
 
-
                         </div>
                     )
                 })
