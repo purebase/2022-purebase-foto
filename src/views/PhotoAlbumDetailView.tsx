@@ -2,6 +2,7 @@ import * as React from "react";
 import {FC, useEffect, useState} from "react";
 import {IPhotoAlbum} from "./PhotoAlbumView";
 import Button from "./Button";
+import {Dimension, fitCastToStage} from "../common/ImageSizeCalc";
 
 interface IPhotoAlbumDetailView extends IPhotoAlbum {
     index: number,
@@ -11,19 +12,24 @@ interface IPhotoAlbumDetailView extends IPhotoAlbum {
 export const PhotoAlbumDetailView:FC<IPhotoAlbumDetailView> = (p) => {
     const [url, setUrl] = useState<string>();
 
+    const doClose = () => {
+        setUrl(undefined);
+        p.close();
+    }
+
     useEffect(() => {
             if (p.index > -1) {
-                console.log(p);
                 const image = p.photos[p.index];
-                console.log(image);
+                const newSize:Dimension = fitCastToStage(
+                    {width: image.width, height: image.height},
+                    {width: window.innerWidth, height: window.innerHeight}
+                );
 
-                const displayWidth = Math.round(image.width / 3);
-                const displayHeight = Math.round(image.height / 3);
-                const urlParams = `=w${displayWidth}-h${displayHeight}-no?authuser=0`;
+                const urlParams = `=w${newSize.width}-h${newSize.height}-no?authuser=0`;
 
                 console.log("url: ", url);
 
-                setUrl(image.src + urlParams)
+                setUrl(image.src + urlParams);
             }
         }, [p.index]);
 
@@ -36,8 +42,8 @@ export const PhotoAlbumDetailView:FC<IPhotoAlbumDetailView> = (p) => {
     return (
         <div className="fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-gray-900 flex flex-col items-center justify-center">
             <div className="object-cover w-full bg-cover bg-center text-center">
-                <div className="flex flex-wrap justify-center" onClick={() => p.close()}>
-                    <img src={url} referrerPolicy="no-referrer" className="rounded-3xl max-w-full h-auto transition-shadow ease-in-out duration-300 shadow-none hover:shadow-xl" alt=""/>
+                <div className="flex flex-wrap justify-center" onClick={() => doClose()}>
+                    <img src={url} referrerPolicy="no-referrer" className="max-w-full h-auto" alt=""/>
                 </div>
                 {/*<h2 className="text-3xl text-white">This is Overlay Image</h2>*/}
             </div>
