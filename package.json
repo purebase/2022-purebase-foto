@@ -3,23 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@mui/base": "~5.0.0-alpha.92",
+    "@mui/base": "~5.0.0-alpha.100",
+    "@types/node": "~16.11.7",
+    "@types/react": "~17.0.39",
+    "@types/react-dom": "~17.0.11",
+    "firebase": "~9.9.4",
+    "react": "~17.0.2",
+    "react-dom": "~17.0.2",
+    "react-photo-album": "^1.16.1",
+    "yet-another-react-lightbox": "^2.1.2"
+  },
+  "devDependencies": {
+    "typescript": "~4.7.4",
     "@testing-library/jest-dom": "~5.16.5",
     "@testing-library/react": "~12.1.5",
     "@testing-library/user-event": "~14.4.2",
     "@types/jest": "~27.4.1",
-    "@types/node": "~16.11.7",
-    "@types/react": "~17.0.39",
-    "@types/react-dom": "~17.0.11",
-    "autoprefixer": "~10.4.8",
-    "firebase": "~9.9.2",
-    "postcss": "~8.4.16",
-    "react": "~17.0.2",
-    "react-dom": "~17.0.2",
-    "react-photo-album": "^1.16.1",
-    "react-scripts": "~5.0.1",
-    "yet-another-react-lightbox": "^2.1.2",
-    "typescript": "~4.7.4"
+    "autoprefixer": "~10.4.12",
+    "postcss": "~8.4.17",
+    "react-scripts": "~5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
