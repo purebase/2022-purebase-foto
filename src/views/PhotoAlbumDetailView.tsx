@@ -1,7 +1,7 @@
 import * as React from "react";
 import {FC, useEffect, useState} from "react";
 import {IPhotoAlbum} from "./PhotoAlbumView";
-import Button from "./Button";
+import TWPlayerButton from "./TWPlayerButton";
 import {Dimension, fitCastToStage} from "../common/ImageSizeCalc";
 
 interface IPhotoAlbumDetailView extends IPhotoAlbum {
@@ -47,7 +47,7 @@ export const PhotoAlbumDetailView:FC<IPhotoAlbumDetailView> = (p) => {
                 </div>
                 {/*<h2 className="text-3xl text-white">This is Overlay Image</h2>*/}
             </div>
-            {/*<Button onClick={() => p.close()}>CLOSE</Button>*/}
+            {/*<TWPlayerButton onClick={() => p.close()}>CLOSE</Button>*/}
         </div>
     );
 }

@@ -4,7 +4,7 @@ import ButtonUnstyled, {
   ButtonUnstyledProps,
 } from '@mui/base/ButtonUnstyled';
 
-const Button = React.forwardRef(function Button(
+const TWPlayerButton = React.forwardRef(function Button(
   props: ButtonUnstyledProps,
   ref: React.ForwardedRef<HTMLButtonElement>,
 ) {
@@ -23,4 +23,4 @@ const Button = React.forwardRef(function Button(
   );
 });
 
-export default Button;
+export default TWPlayerButton;
