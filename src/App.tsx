@@ -2,7 +2,9 @@ import * as React from 'react';
 import {AppContextProps} from "./data/AppContext";
 import {useContext, useEffect} from "react";
 import {PhotoAlbumsView} from "./views/PhotoAlbumsView";
-import {SiteHeader} from "./views/SiteHeader";
+import {
+    Card
+} from "react-daisyui";
 
 function App() {
 
@@ -14,34 +16,23 @@ function App() {
         // eslint-disable-next-line
     }, []);
 
-    const photos = [
-        {
-            src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
-            width: 320,
-            height: 174
-        },
-        {
-            src: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
-            width: 320,
-            height: 212
-        },
-
-        {
-            src: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
-            width: 320,
-            height: 212,
-        },
-    ];
-
   return (
       <>
-        {/*<Player />*/}
-
-        <SiteHeader/>
-
+          {/* card */}
+          <Card className="shadow-2xl w-800 m-4">
+              <figure>
+                  <img src="https://picsum.photos/id/1005/500/250" />
+              </figure>
+              <Card.Body>
+                  <Card.Title>DaisyUI Card</Card.Title>
+                  <p>
+                      Rerum reiciendis beatae tenetur excepturi aut pariatur est eos. Sit
+                      sit necessitatibus.
+                  </p>
+              </Card.Body>
+          </Card>
 
         <PhotoAlbumsView/>
-
       </>
   );
 }
