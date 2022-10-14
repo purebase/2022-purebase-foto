@@ -3,15 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/node": "~16.11.7",
+    "@types/node": "~16.11.65",
     "@types/react": "~17.0.39",
     "@types/react-dom": "~17.0.11",
     "firebase": "~9.9.4",
+    "react-photo-album": "~1.16.1",
     "react": "~17.0.2",
     "react-dom": "~17.0.2",
-    "react-photo-album": "~1.16.1",
-    "daisyui": "^2.31.0",
-    "react-daisyui": "2.4.2"
+    "daisyui": "^2.6.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "~5.16.5",
@@ -19,10 +18,10 @@
     "@testing-library/user-event": "~14.4.2",
     "@types/jest": "~27.4.1",
     "@types/lodash": "^4.14.186",
-    "autoprefixer": "~10.4.12",
     "lodash": "~4.17.21",
+    "autoprefixer": "~10.4.12",
     "postcss": "~8.4.17",
-    "react-scripts": "~4.0.3",
+    "react-scripts": "~5.0.1",
     "typescript": "~4.7.4"
   },
   "scripts": {

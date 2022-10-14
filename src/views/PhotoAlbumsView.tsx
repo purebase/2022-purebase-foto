@@ -1,4 +1,3 @@
-import PhotoAlbum, {Image, RenderPhoto} from "react-photo-album";
 import * as React from "react";
 import {AppContext} from "../App";
 import {useContext, useEffect, useState} from "react";
@@ -13,20 +12,18 @@ export const PhotoAlbumsView = () => {
 
     const [photoAlbums, setPhotoAlbums] = useState<IPhotoAlbums>();
 
-
-
     useEffect(() => {
 
         console.debug("mediaAlbums changed");
         if (mediaAlbums) {
-            const albums:IPhotoAlbums = mediaAlbums?.map((mediaAlbum, index, array) => {
+            const albums: IPhotoAlbums = mediaAlbums?.map((mediaAlbum, index, array) => {
                 return {
                     title: mediaAlbum.title,
                     cover: mediaAlbum.cover,
                     photos: mediaAlbum.children.map((media => {
-/*                        const displayWidth = Math.round(media.width / 10);//226;//
-                        const displayHeight = Math.round(media.height / 10);//302;//
-                        */
+                        /*                        const displayWidth = Math.round(media.width / 10);//226;//
+                                                const displayHeight = Math.round(media.height / 10);//302;//
+                                                */
                         // TODO Die Groesse an Verwendungsstelle umrechnen ist effizienter!!
 
                         return {
@@ -49,16 +46,12 @@ export const PhotoAlbumsView = () => {
 
     if (!photoAlbums) return null;
 
-    return(
+    return (
         <>
             {
                 photoAlbums.map((album, index, array) => {
                     return (
-                        <div key={index}>
-                            <h4>{album.title}</h4>
-                            <PhotoAlbumView title={album.title} cover={album.cover} photos={album.photos}/>
-
-                        </div>
+                        <PhotoAlbumView title={album.title} cover={album.cover} photos={album.photos}/>
                     )
                 })
             }

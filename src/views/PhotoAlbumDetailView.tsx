@@ -1,7 +1,6 @@
 import * as React from "react";
 import {FC, useEffect, useState} from "react";
 import {IPhotoAlbum} from "./PhotoAlbumView";
-import TWPlayerButton from "./TWPlayerButton";
 import {Dimension, fitCastToStage} from "../common/ImageSizeCalc";
 
 interface IPhotoAlbumDetailView extends IPhotoAlbum {
